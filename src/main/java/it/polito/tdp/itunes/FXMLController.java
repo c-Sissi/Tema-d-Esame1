@@ -4,6 +4,7 @@
 
 package it.polito.tdp.itunes;
 
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import it.polito.tdp.itunes.model.Album;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnPercorso; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA1"
-    private ComboBox<?> cmbA1; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA1; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA2"
-    private ComboBox<?> cmbA2; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA2; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
@@ -50,20 +51,70 @@ public class FXMLController {
     private TextField txtX; // Value injected by FXMLLoader
 
     @FXML
-    void doCalcolaAdiacenze(ActionEvent event) {
+    void doCalcolaAdiacenze(ActionEvent event) throws IllegalArgumentException{
     	
+    	Album a = this.cmbA1.getValue() ;
+    	
+    	if (this.model.getVertex().contains(a)) {
+    		txtResult.setText("ELENCO DEI NODI SUCCESSORI: \n");
+    		txtResult.appendText(this.model.elencoSuccessori(a));
+		}
+    	else {
+    		txtResult.setText("VERTICE NON PRESENTE NEL GRAFO");
+    		throw new IllegalArgumentException () ;
+    	}
     }
+    	
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
+    	int bilancio ;
+    	Album source = this.cmbA1.getValue() ;
+    	Album target = this.cmbA2.getValue() ;
+    	try {
+    		bilancio = Integer.parseInt(txtX.getText()) ;
+    	}
+    	catch (NumberFormatException e){
+    		txtResult.setText("INSERIRE UN NUMERO" ) ;
+    		return ;
+    	}
     	
+    	this.model.simplePath(bilancio, source , target) ;
+    	if(this.model.equals(null)) {
+    		txtResult.setText("NESSUN CAMMINO TROVATO");
+    	}
+    	else {
+	    	txtResult.setText("IL CAMMINO TROVATO E':\n") ;
+	    	txtResult.appendText(this.model.toStringSimplePath());
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	int n ;
     	
+    	try {
+    		n = Integer.parseInt(txtN.getText()) ;
+    		
+    	}
+    	catch(NumberFormatException e) {
+    		txtResult.setText("INSERIRE UN VALORE NUMERICO");
+    		return;
+    	}
+    	this.model.creaGrafo(n);
+    	this.model.addArco();
+    	txtResult.setText("GRAFO CREATO CORRETAMENTE\n");
+    	txtResult.appendText("# VERTICI: " + this.model.getVertexSet()+"\n") ;
+    	txtResult.appendText("# ARCHI: " + this.model.getEdgeSet());
     }
 
+    
+    public void setModel(Model model) {
+    	this.model = model;
+    	this.cmbA1.getItems().addAll(this.model.listaAlbum());
+    	this.cmbA2.getItems().addAll(this.model.listaAlbum());
+
+    }
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert btnAdiacenze != null : "fx:id=\"btnAdiacenze\" was not injected: check your FXML file 'Scene.fxml'.";
@@ -78,7 +129,5 @@ public class FXMLController {
     }
 
     
-    public void setModel(Model model) {
-    	this.model = model;
-    }
+   
 }

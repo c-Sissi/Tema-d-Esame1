@@ -7,8 +7,9 @@ public class Track {
 	private int milliseconds;
 	private int bytes;
 	private double unitPrice;
+	private Integer albumId;
 	
-	public Track(Integer trackId, String name, String composer, int milliseconds, int bytes, double unitPrice) {
+	public Track(Integer trackId, String name, String composer, int milliseconds, int bytes, double unitPrice, int albumId) {
 		super();
 		this.trackId = trackId;
 		this.name = name;
@@ -16,6 +17,7 @@ public class Track {
 		this.milliseconds = milliseconds;
 		this.bytes = bytes;
 		this.unitPrice = unitPrice;
+		this.albumId = albumId ;
 	}
 	
 	public Integer getTrackId() {
@@ -62,6 +64,10 @@ public class Track {
 		result = prime * result + ((trackId == null) ? 0 : trackId.hashCode());
 		return result;
 	}
+	
+	public Integer getAlbumId() {
+		return this.albumId ;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -82,7 +88,7 @@ public class Track {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + "\n";
 	}
 	
 	

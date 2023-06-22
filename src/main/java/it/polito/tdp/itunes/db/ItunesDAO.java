@@ -88,7 +88,7 @@ public class ItunesDAO {
 			while (res.next()) {
 				result.add(new Track(res.getInt("TrackId"), res.getString("Name"), 
 						res.getString("Composer"), res.getInt("Milliseconds"), 
-						res.getInt("Bytes"),res.getDouble("UnitPrice")));
+						res.getInt("Bytes"),res.getDouble("UnitPrice"), res.getInt(3)));
 			
 			}
 			conn.close();
